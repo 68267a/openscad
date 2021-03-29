@@ -1,0 +1,1 @@
+translate([0,0,4]) rotate([180,0,0]) rotate_extrude($fn=5) polygon( points=[[0,0],[10,2],[10,4],[0,4]] );
