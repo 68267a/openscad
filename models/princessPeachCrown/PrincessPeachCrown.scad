@@ -1,36 +1,36 @@
 
-include <simpleModules.scad>;
-//include <bend.scad>;
+include <bend.scad>;
 
 //unit conversion
-//1 inch = 2.54 cm
-//1 cm = 0.3937 inch
+//1 inch = 25.4 cm
+//1 cm = 0.03937 inch
 
 //crown is a rectangle with 4 diagonal squares
 //baby doll = 6.5in
-bandCircumference=16.51;
+bandCircumference=165.1;
 //toddler = 22in
-//bandCircumference=55.88
+//bandCircumference=558.8
 bandDiameter = bandCircumference / PI;
 //crownPoints
 crownPoint = bandCircumference/4;
-crownDiag = crownPoint*1.41421;
+crownDiag = crownPoint/1.41421;
 
 module flatShape(){
-	square([4*crownDiag, crownPoint]);
-	translate([0*crownDiag,crownPoint,0]) rotate([0,0,-45]) square(crownPoint, center=false);
-	translate([1*crownDiag,crownPoint,0]) rotate([0,0,-45]) square(crownPoint, center=false);
-	translate([2*crownDiag,crownPoint,0]) rotate([0,0,-45]) square(crownPoint, center=false);
-	translate([3*crownDiag,crownPoint,0]) rotate([0,0,-45]) square(crownPoint, center=false);
+	square([bandCircumference, crownPoint/2]);
+	translate([0*crownPoint,crownPoint/2,0]) rotate([0,0,-45]) square(crownDiag, center=false);
+	translate([1*crownPoint,crownPoint/2,0]) rotate([0,0,-45]) square(crownDiag, center=false);
+	translate([2*crownPoint,crownPoint/2,0]) rotate([0,0,-45]) square(crownDiag, center=false);
+	translate([3*crownPoint,crownPoint/2,0]) rotate([0,0,-45]) square(crownDiag, center=false);
 }
 
 $fn=200;
+x = bandCircumference;
+y = crownPoint;
+z = 1;
 
-module orientShape(){
-//rotate(90)
-//linear_extrude(1) 
-flatShape();
-}
+translate([-bandDiameter/2, -crownPoint/2,0])
+  *cube(size = [bandDiameter, y, z]);
 
-//rotate_extrude() orientShape();
-orientShape();
+bend(size = [x, y, z], angle = 360, frags = 360)
+    linear_extrude(z) 
+        flatShape();
