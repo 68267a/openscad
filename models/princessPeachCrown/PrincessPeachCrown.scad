@@ -22,15 +22,33 @@ $fn=200;
 	jewelRatio = .65;
 	jewelWidth = jewelHeight*jewelRatio;
 
+
 //bend areas
 	//crown()
 		cx = bandCircumference;
 		cy = crownPoint;
 		cz = 5;
 	//jewelBase()
-		jBx=20;
-		jBy=1;
-		jBz=5;
+		jewelBaseX=jewelHeight*PI;
+		jewelBaseDiameter=1;
+		jewelBaseY=jewelBaseDiameter*1.5;
+		jewelBaseZ=jewelBaseY;
+		jewelBaseOffset=7;
+
+module crown(){
+	translate([cx/2,2*cy,0]) {
+		rotate([0,0,-135]) {
+			bend(size=[cx, cy, cz], angle=360, frags=200) {
+				difference() {
+					crownBody();
+					jewelTrack();
+				}
+				jewelBase();
+				//NO! NOT HERE! jewels();
+			}
+		}
+	}
+}
 
 module crownBody(){
 	color("gold")
@@ -51,8 +69,32 @@ module crownBody(){
 	}
 }
 
+module jewel(){
+	resize(newsize=[jewelWidth,jewelHeight,5]) 
+	sphere(r=1);
+}
+
+module jewels(){
+	scaleBentJewelBase();
+	translate([1*crownPoint/2,jewelHeight*.85,1.5]) {
+		color("goldenrod") scaleBentJewelBase();
+		color("DeepPink") jewel();
+	}
+	translate([3*crownPoint/2,jewelHeight*.85,1.5]) {
+		color("goldenrod") scaleBentJewelBase();
+		color("RoyalBlue") jewel();
+	}
+	translate([5*crownPoint/2,jewelHeight*.85,1.5]) {
+		color("goldenrod") scaleBentJewelBase();
+		color("DeepPink") jewel();
+	}
+	translate([7*crownPoint/2,jewelHeight*.85,1.5]) {
+		color("goldenrod") scaleBentJewelBase();
+		color("RoyalBlue") jewel();
+	}
+}
+
 module jewelTrack(){
-	//translate([0,crownPoint/3.7,2])
 	p3=crownPoint/2.75;
 	color("goldenrod")
 	line3d(
@@ -64,46 +106,38 @@ module jewelTrack(){
 }
 
 module jewelBase(){
-	p1=[0,jBy,jBz];
-	p2=[jBx,jBy,jBz];
-	diameter=2;
-
-	bend(size=[jBx, jBy, 2*jBz], angle=90, frags=200) {
-		//cube([jBx,diameter,diameter]);
-		line3d(p1, p2, diameter=diameter,$fn=24);
-	}
-}
-
-
-module jewel(){
-	resize(newsize=[jewelWidth,jewelHeight,5]) 
-	sphere(r=1);
-}
-
-module jewels(){
-	color("DeepPink")  translate([1*crownPoint/2,jewelHeight*.85,1.5]) jewel();
-	color("RoyalBlue") translate([3*crownPoint/2,jewelHeight*.85,1.5]) jewel();
-	color("DeepPink")  translate([5*crownPoint/2,jewelHeight*.85,1.5]) jewel();
-	color("RoyalBlue") translate([7*crownPoint/2,jewelHeight*.85,1.5]) jewel();
-}
-
-module crown(){
-	translate([cx/2,2*cy,0]) {
-		rotate([0,0,-135]) {
-			bend(size=[cx, cy, cz], angle=360, frags=200) {
-				difference() {
-					crownBody();
-					jewelTrack();
-				}
-				// jewelBase();
-				//NO! NOT HERE! jewels();
+		translate([0,-jewelBaseDiameter,-jewelBaseDiameter]) {
+			translate([0,jewelBaseDiameter/2,0]) {	
+				line3d(
+					p1=[0, jewelBaseY, jewelBaseZ],
+					p2=[jewelBaseX, jewelBaseY, jewelBaseZ],
+					diameter=jewelBaseDiameter,
+					$fn=24
+				);
 			}
+			translate([0,jewelBaseDiameter,jewelBaseDiameter])
+			cube([jewelBaseX,jewelBaseDiameter,jewelBaseDiameter]);
 		}
 	}
+
+module bendJewelBase(){
+	bend(size=[jewelBaseX+jewelBaseOffset, jewelBaseY+jewelBaseOffset, jewelBaseZ], angle=360, frags=200)
+	jewelBase();
+}
+
+module scaleBentJewelBase(){
+	scale([jewelRatio,1,1])
+	bendJewelBase();
+}
+
+module positionJewels(){
+	bend(size=[cx, cy, cz], angle=360, frags=200)
+	jewels();
 }
 
 translate([20,0,0]){
 	crown();
+	//positionJewels(); //hm... TODO: THIS
 	//debug
 	%cube([cx,cy,cz]);
 	crownBody();
@@ -111,5 +145,10 @@ translate([20,0,0]){
 	jewels();
 }
 
-jewelBase();
-//resize(newsize=[jewelWidth,jewelHeight,5]) jewelBase();
+//more DEBUG
+translate([-jewelBaseX,0,0]) {
+		%cube([jewelBaseX,jewelBaseY,jewelBaseZ]);
+		jewelBase();
+		bendJewelBase();
+		scaleBentJewelBase();
+}
