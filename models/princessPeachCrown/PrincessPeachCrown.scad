@@ -44,26 +44,53 @@ $fn=200;
 	*%crownNegative();
 	*%crownPoint();
 	*%crownPoints();
-	%translate([bandDiameter,0,1]) jewel();
-	#%translate([bandDiameter,0,0]) jewelBaseNegative();
+	//translate([10,0,10]) jewel();
+	jewelBaseNegative();
+	jewelNotches();
 //END DEBUG
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
 //WORK AREA
+	module jewelNotch(){
+		rotate_extrude(){
+			polygon([
+				[0, 0], 
+				[.7, 0], 
+				[.7, 1], 
+				[0,1.5]
+			]);
+			translate([0,1,0]){
+				intersection(){
+					circle(1);
+					square(1);
+				}
+			}
+		}
+	}
+
+	module jewelNotches(){
+		translate([0,3,0]) jewelNotch();
+		translate([2,-3,0]) jewelNotch();
+		translate([-2,-3,0]) jewelNotch();
+	}
+
 	module jewel(){
-		difference(){
-			resize(newsize=[jewelX,jewelY,jewelZ]) 
-				sphere(r=1);
-			translate([-jewelX/2,-jewelY/2,-jewelZ/2])
-				cube([jewelX,jewelY,jewelZ/2]);
+		scale([.67,1,.64]) {
+			rotate_extrude() {
+				intersection(){
+					circle(jewelZ);
+					square(jewelY);
+				}
+			}
 		}
 	}
 
 	module jewelBaseNegative(){
-		translate([0,0,0.5])
-		resize(newsize=[jewelX,jewelY,jewelZ]) 
-			circle(1);
+		difference() {
+			scale([1.1,1.1,.33]) jewel();
+			translate([0,0,.1]) jewel();
+		}
 	}
 
 
@@ -142,7 +169,7 @@ $fn=200;
 
 ///////////////////////////////////////////////////////////////////////
 //MAIN
-	crown();
+	//crown();
 	module crown(){
 		rotate([0,0,45]) crownBody();
 		//jewelTrack();
