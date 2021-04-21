@@ -1,13 +1,9 @@
-
-// include <bend.scad>;
-// include <line3d.scad>;
-
 $fn=200;
 
 //measurement/unit settings
 	//baby doll = 6.5in = 165.1cm
 	//toddler = 22in = 558.8cm
-	circumference = 165.1;
+	circumference = 500;
 	unit = "cm"; // inch or cm
 	printJewels=false; //set to false if you want to print jewels in a different color
 //end measurement/unit settings
@@ -19,22 +15,24 @@ $fn=200;
 //unit conversion
 
 //adjustable settings
-	bandThickness = 3;
-	pointX = 20;
-	pointY = 25;
-	crownHeight = 50;
 	jewelRatio = .65;
-	jewelX = 14;
-	jewelY = 21;
-	jewelZ = 9;
-	jewelBaseX=15;	
-	jewelBaseY=22;	
-	jewelBaseZ=10;	
-	jewelBaseOffset = 10;
-	jewelBaseDiameter = 1;
 
 //calculated settings
-	jewelOffset = 1.06;
+	bandThickness = circumference*0.018;
+	pointX = circumference*0.12;
+	pointY = circumference*0.15;
+	crownHeight = circumference*0.30;
+	jewelX = circumference*0.085;
+	jewelY = circumference*0.12;
+	jewelZ = circumference*0.05;
+	jewelBaseX= circumference*0.09;
+	jewelBaseY= circumference*0.13;
+	jewelBaseZ= circumference*0.06;
+	jewelBaseOffset = circumference*0.06;
+	jewelBaseDiameter = circumference*0.006;
+	jewelNotchH=circumference*0.006;
+	jewelNotchR=circumference*0.004;
+	jewelOffset=circumference*0.0064;
 	bandDiameter = bandCircumference / PI;
 	bandRadius = bandDiameter/2;
 
@@ -51,18 +49,9 @@ $fn=200;
 
 ///////////////////////////////////////////////////////////////////////
 //WORK AREA
-	module jewelNotch(){
-		cylinder(h=1,r=.75);
-		translate([0,0,1]) 
-		sphere(.75);
 
-		translate([0,-0.25,0])
-		rotate([90,0,270])
-		rotate_extrude(angle=90, $fn=7)
-		translate([1, 0, 0])
-		square(1, center=true);
-	}
-
+///////////////////////////////////////////////////////////////////////
+//JEWELS
 	module jewel(){
 		scale([.67,1,.64]) {
 			rotate_extrude() {
@@ -74,11 +63,68 @@ $fn=200;
 		}
 	}
 
+	module jewelNotch(){
+		cylinder(h=jewelNotchH,r=jewelNotchR);
+		translate([0,0,1]) 
+		sphere(jewelNotchR);
+
+		translate([0,-0.25,0])
+		rotate([90,0,270])
+		rotate_extrude(angle=90, $fn=7)
+		translate([1, 0, 0])
+		square(1, center=true);
+	}
+
+	module jewelNotches(){
+		translate([0,3,0]) jewelNotch();
+		translate([2,-3,0]) jewelNotch();
+		translate([-2,-3,0]) jewelNotch();
+	}
+
+
+	module jewelNotched(){
+		difference(){
+			translate([0,0,.1]) jewel();
+			jewelNotches();
+		}
+	}
+
+	module jewels(){
+		if(!printJewels) translate([jewelX,0,0]) jewelNotched();
+
+		translate([0,-bandRadius*jewelOffset,jewelY]) {
+			rotate([90,0,0]) {
+				if(printJewels) color("DeepPink") jewelNotched();
+				jewelBaseNotched();
+			}
+		}
+		translate([bandRadius*jewelOffset,0,jewelY]) {
+			rotate([90,0,90]){
+				if(printJewels) color("RoyalBlue") jewelNotched();
+				jewelBaseNotched();
+			}
+		}
+		translate([0,bandRadius*jewelOffset,jewelY]) {
+			rotate([90,0,180]){
+				if(printJewels) color("DeepPink") jewelNotched();
+				jewelBaseNotched();
+			}
+		}
+		translate([-bandRadius*jewelOffset,0,jewelY]) {
+			rotate([90,0,-90]){
+				if(printJewels) color("RoyalBlue") jewelNotched();
+				jewelBaseNotched();
+			}
+		}
+	}
+//END JEWELS
+///////////////////////////////////////////////////////////////////////
+
 //END WORK AREA
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
-//MISC MODULES
+//CROWN
 	module crownNegative(){
 		translate([0,0,-2.5]) linear_extrude(height=crownHeight+5) circle(d=bandDiameter);
 	}
@@ -117,20 +163,13 @@ $fn=200;
 	module jewelTrack(){
 
 	}
-
-	module jewelNotches(){
-		translate([0,3,0]) jewelNotch();
-		translate([2,-3,0]) jewelNotch();
-		translate([-2,-3,0]) jewelNotch();
-	}
+//END CROWN
+///////////////////////////////////////////////////////////////////////
 
 
-	module jewelNotched(){
-		difference(){
-			translate([0,0,.1]) jewel();
-			jewelNotches();
-		}
-	}
+
+///////////////////////////////////////////////////////////////////////
+//JEWEL BASE
 
 	module jewelBase(){
 		difference() {
@@ -141,48 +180,23 @@ $fn=200;
 
 	module jewelBaseNotched(){
 		jewelBase();
+		rotate([180,0,0]) jewelBase();
 		scale([1.01,1.01,1]) 
 		jewelNotches();
 	}
 
-	module jewels(){
-		if(!printJewels) translate([jewelX,0,0]) jewelNotched();
-
-		translate([0,-bandRadius*jewelOffset,jewelY]) {
-			rotate([90,0,0]) {
-				if(printJewels) color("DeepPink") jewelNotched();
-				jewelBaseNotched();
-			}
-		}
-		translate([bandRadius*jewelOffset,0,jewelY]) {
-			rotate([90,0,90]){
-				if(printJewels) color("RoyalBlue") jewelNotched();
-				jewelBaseNotched();
-			}
-		}
-		translate([0,bandRadius*jewelOffset,jewelY]) {
-			rotate([90,0,180]){
-				if(printJewels) color("DeepPink") jewelNotched();
-				jewelBaseNotched();
-			}
-		}
-		translate([-bandRadius*jewelOffset,0,jewelY]) {
-			rotate([90,0,-90]){
-				if(printJewels) color("RoyalBlue") jewelNotched();
-				jewelBaseNotched();
-			}
-		}
-	}
-//END MISC MODULES
+//JEWEL BASE
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
 //MAIN
+
 	crown();
 	module crown(){
-		%rotate([0,0,45]) crownBody();
+		rotate([0,0,45]) crownBody();
 		//jewelTrack();
 		jewels();
 	}
+
 //END MAIN
 ///////////////////////////////////////////////////////////////////////
