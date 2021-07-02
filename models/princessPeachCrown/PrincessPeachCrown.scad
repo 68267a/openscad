@@ -25,178 +25,62 @@ $fn=200;
 	jewelX = circumference*0.085;
 	jewelY = circumference*0.12;
 	jewelZ = circumference*0.05;
-	jewelBaseX= circumference*0.09;
-	jewelBaseY= circumference*0.13;
-	jewelBaseZ= circumference*0.06;
+	jewelBaseX = circumference*0.09;
+	jewelBaseY = circumference*0.13;
+	jewelBaseZ = circumference*0.06;
 	jewelBaseOffset = circumference*0.06;
 	jewelBaseDiameter = circumference*0.006;
-	jewelNotchH=circumference*0.006;
-	jewelNotchR=circumference*0.004;
-	jewelOffset=circumference*0.0064;
+	jewelNotchH = circumference*0.006;
+	jewelNotchR = circumference*0.004;
+	jewelOffset = circumference*0.0064;
 	bandDiameter = bandCircumference / PI;
 	bandRadius = bandDiameter/2;
 
-///////////////////////////////////////////////////////////////////////
-//DEBUG
-	// *%translate([bandDiameter,0,0]) point();
-	// *%crownNegative();
-	// *%crownPoint();
-	// *%crownPoints();
-	// translate([10,0,0]) rotate([180,0,0]) jewelNotched();
-	jewelBaseNotched();
-//END DEBUG
-///////////////////////////////////////////////////////////////////////
+module crownBody(){
+	difference(){
+		//CROWN BODY
+		linear_extrude(height=crownHeight) circle(d=bandDiameter);
+		translate([0,0,-2]) linear_extrude(height=crownHeight+5) circle(d=bandDiameter-bandThickness);
 
-///////////////////////////////////////////////////////////////////////
-//WORK AREA
+		//CROWN POINTS
+		translate([-bandDiameter/2,0,crownHeight]) {
+			rotate([45,0,0]) 
+			rotate([0,90,0]) 
+			linear_extrude(height=bandDiameter+5) 
+			square(bandDiameter/2, center=true);
+		}
+		translate([0,bandDiameter/2,crownHeight]) {
+			rotate([0,45,0])
+			rotate([90,0,0])
+			linear_extrude(height=bandDiameter+5)
+			square(bandDiameter/2, center=true);
+		}
+	}
+}
+//jewel, jewelBase, jewelTrack
 
-///////////////////////////////////////////////////////////////////////
-//JEWELS
-	module jewel(){
-		scale([.67,1,.64]) {
-			rotate_extrude() {
-				intersection(){
-					circle(jewelZ);
-					square(jewelY);
-				}
+module jewel(){
+	scale([.67,1,.64]) {
+		rotate_extrude() {
+			intersection(){
+				circle(jewelZ);
+				square(jewelY);
 			}
 		}
 	}
+}
 
-	module jewelNotch(){
-		cylinder(h=jewelNotchH,r=jewelNotchR);
-		translate([0,0,1]) 
-		sphere(jewelNotchR);
+//jewel();
 
-		translate([0,-0.25,0])
-		rotate([90,0,270])
-		rotate_extrude(angle=90, $fn=7)
-		translate([1, 0, 0])
-		square(1, center=true);
+module jewelBase(){
+	difference() {
+		scale([1.1,1.1,.33]) jewel();
+		translate([0,0,.1]) jewel();
 	}
+	//needs a platform. Shadow/projection?
+}
 
-	module jewelNotches(){
-		translate([0,3,0]) jewelNotch();
-		translate([2,-3,0]) jewelNotch();
-		translate([-2,-3,0]) jewelNotch();
-	}
+//rotate([90,0,0]) 
+	jewelBase();
 
-
-	module jewelNotched(){
-		difference(){
-			translate([0,0,.1]) jewel();
-			jewelNotches();
-		}
-	}
-
-	module jewels(){
-		if(!printJewels) translate([jewelX,0,0]) jewelNotched();
-
-		translate([0,-bandRadius*jewelOffset,jewelY]) {
-			rotate([90,0,0]) {
-				if(printJewels) color("DeepPink") jewelNotched();
-				jewelBaseNotched();
-			}
-		}
-		translate([bandRadius*jewelOffset,0,jewelY]) {
-			rotate([90,0,90]){
-				if(printJewels) color("RoyalBlue") jewelNotched();
-				jewelBaseNotched();
-			}
-		}
-		translate([0,bandRadius*jewelOffset,jewelY]) {
-			rotate([90,0,180]){
-				if(printJewels) color("DeepPink") jewelNotched();
-				jewelBaseNotched();
-			}
-		}
-		translate([-bandRadius*jewelOffset,0,jewelY]) {
-			rotate([90,0,-90]){
-				if(printJewels) color("RoyalBlue") jewelNotched();
-				jewelBaseNotched();
-			}
-		}
-	}
-//END JEWELS
-///////////////////////////////////////////////////////////////////////
-
-//END WORK AREA
-///////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////
-//CROWN
-	module crownNegative(){
-		translate([0,0,-2.5]) linear_extrude(height=crownHeight+5) circle(d=bandDiameter);
-	}
-
-	module crownBody(){
-		difference() {
-			linear_extrude(height=crownHeight) circle(d=bandDiameter+bandThickness);
-			crownPoints();
-			crownNegative();
-		}
-	}
-
-	module point(){
-		//square(crownDiag, center=true);
-		polygon(points=[
-			[pointX,0],
-			[0,pointY],
-			[-pointX,0],
-			[0,-pointY],
-		]);
-	}
-
-	module crownPoint(){
-		translate([0,bandDiameter*1.2/2,crownHeight])
-		rotate([90,0,0])
-			linear_extrude(height=bandDiameter*1.2)
-				//rotate([0,0,-45]) 
-					point();
-	}
-
-	module crownPoints(){
-		crownPoint();
-		rotate([0,0,90]) crownPoint();
-	}
-
-	module jewelTrack(){
-
-	}
-//END CROWN
-///////////////////////////////////////////////////////////////////////
-
-
-
-///////////////////////////////////////////////////////////////////////
-//JEWEL BASE
-
-	module jewelBase(){
-		difference() {
-			scale([1.1,1.1,.33]) jewel();
-			translate([0,0,.1]) jewel();
-		}
-	}
-
-	module jewelBaseNotched(){
-		jewelBase();
-		rotate([180,0,0]) jewelBase();
-		scale([1.01,1.01,1]) 
-		jewelNotches();
-	}
-
-//JEWEL BASE
-///////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////
-//MAIN
-
-	crown();
-	module crown(){
-		rotate([0,0,45]) crownBody();
-		//jewelTrack();
-		jewels();
-	}
-
-//END MAIN
-///////////////////////////////////////////////////////////////////////
+crownBody();
