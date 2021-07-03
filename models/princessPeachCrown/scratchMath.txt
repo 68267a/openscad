@@ -1,0 +1,20 @@
+722	Base to point 
+300 Jewel
+400 JewelBase
+085	Base to JewelBase
+050 JewelBaseDepth
+
+pixels	cm	ratio to circumference	
+725	146	0.292	Base to high point
+300	60	0.121	Jewel
+400	81	0.161	JewelBase
+86	17	0.035	Base to JewelBase
+50	10	0.020	JewelBaseDepth
+400	81	0.161	Base to low point
+375	76	0.151	High point to low point X
+310	63	0.125	High point to low point Y
+650	131	0.262	pointSquare
+			
+8	-	-	Band circumference multiplier
+2480	500	-	Band Circumference
+0.201612903	-	-	pixel to cm

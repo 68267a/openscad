@@ -14,27 +14,18 @@ $fn=200;
 	bandCircumference = unit=="inch" ? circumference * i2c : circumference;
 //unit conversion
 
-//adjustable settings
-	jewelRatio = .65;
-
 //calculated settings
-	bandThickness = circumference*0.018;
-	pointX = circumference*0.12;
-	pointY = circumference*0.15;
-	crownHeight = circumference*0.30;
-	jewelX = circumference*0.085;
-	jewelY = circumference*0.12;
-	jewelZ = circumference*0.05;
-	jewelBaseX = circumference*0.09;
-	jewelBaseY = circumference*0.13;
-	jewelBaseZ = circumference*0.06;
-	jewelBaseOffset = circumference*0.06;
-	jewelBaseDiameter = circumference*0.006;
-	jewelNotchH = circumference*0.006;
-	jewelNotchR = circumference*0.004;
-	jewelOffset = circumference*0.0064;
-	bandDiameter = bandCircumference / PI;
-	bandRadius = bandDiameter/2;
+	bandThickness		= circumference*0.018;
+	crownHeight			= circumference*0.300;
+	crownPoint			= circumference*0.262; //rotate 45
+	jewelHeight			= circumference*0.121;
+	jewelZLift			=	circumference*0.056;
+	jewelBaseHeight	= circumference*0.161;
+	jewelBaseZLift	= circumference*0.035;
+	jewelTrack			= circumference*0.016;
+	jewelTrackZLift	= circumference*0.115;
+//calculated settings
+
 
 module crownBody(){
 	difference(){
@@ -70,17 +61,15 @@ module jewel(){
 	}
 }
 
-//jewel();
 
 module jewelBase(){
+	translate([0,0,jewelBaseDiameter])
 	difference() {
 		scale([1.1,1.1,.33]) jewel();
 		translate([0,0,.1]) jewel();
 	}
+	linear_extrude(jewelBaseDiameter) projection() translate([0,0,jewelBaseDiameter]) scale([1.1,1.1,.33]) jewel();
 	//needs a platform. Shadow/projection?
 }
-
-//rotate([90,0,0]) 
-	jewelBase();
-
-crownBody();
+translate([0,0,jewelX]) rotate([90,0,0]) jewelBase();
+#rotate([0,0,45]) crownBody();
