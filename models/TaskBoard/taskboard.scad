@@ -1,5 +1,6 @@
 $fn=200;
 
+// use "lib/fonts/Vampire Kiss Demo/fonts/Vampire Kiss Demo.ttf";
 //TODO: left/right hand
 //TODO: make toggle boxes less ugly
 //TODO: paper lines should be grooves
@@ -10,7 +11,6 @@ $fn=200;
 	c2i = 0.03937;
 
 HAND = "both"; //right|left|both
-
 PAGE_X	=	i2c * 4;
 PAGE_Y	= i2c * 6;
 // PAGE_Z			= i2c * (1/16);
@@ -35,8 +35,12 @@ PAGEOFFSET_X	= TOGGLEPADDING*2;
 PAGEOFFSET_Y	= TOGGLEPADDING*1.25;
 
 module page(){
-  color("white") cube([PAGE_X, PAGE_Y, PAGE_Z]);
-	translate([PAGEOFFSET_X+TOGGLEPADDING,TOGGLESPACE*NUMTOGGLES+TOGGLESPACE+1,PAGE_Z]) text("Daily Chores");
+  difference() {
+		color("white") cube([PAGE_X, PAGE_Y, PAGE_Z]);
+		linear_extrude(3*PAGE_Z)
+			translate([PAGEOFFSET_X+TOGGLEPADDING,TOGGLESPACE*NUMTOGGLES+TOGGLESPACE+1,1]) 
+			text("Daily Chores", font = "Vampire Kiss Demo");
+	}
 }
 
 module toggle(){
