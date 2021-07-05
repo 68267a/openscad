@@ -1,53 +1,51 @@
 $fn=200;
 
+//TODO: left/right hand
+//TODO: make toggle boxes less ugly
+//TODO: paper lines should be grooves
+//TODO: paper inserts
+
 //unit conversion
 	i2c = 25.4;
 	c2i = 0.03937;
 
-PAGEWIDTH			=	i2c * 4;
-PAGEHEIGHT		= i2c * 6;
-// PAGEDEPTH			= i2c * (1/16);
-PAGEDEPTH			= 1;
+HAND = "both"; //right|left|both
 
-TOGGLEWIDTH		= i2c * 1;
-TOGGLEHEIGHT	= i2c * .5;
-TOGGLEDEPTH		= i2c * .75;
+PAGE_X	=	i2c * 4;
+PAGE_Y	= i2c * 6;
+// PAGE_Z			= i2c * (1/16);
+PAGE_Z	= 1;
+
+TOGGLE_X	= 31	; //x
+TOGGLE_Y	= 12.3; //y
+TOGGLE_Z	= 31	; //z
 
 TOGGLEPADDING = 4;
-TOGGLESPACE		= TOGGLEPADDING + TOGGLEHEIGHT;
-NUMTOGGLES		= floor(((PAGEHEIGHT * .9) - TOGGLESPACE) / TOGGLESPACE);
+TOGGLESPACE		= TOGGLEPADDING + TOGGLE_Y;
+NUMTOGGLES		= floor(((PAGE_Y * .9) - TOGGLESPACE) / TOGGLESPACE);
 
-LINEPADDING		=	TOGGLEPADDING*2 + TOGGLEWIDTH;
-LINELENGTH		=	PAGEWIDTH - (TOGGLEPADDING*2);
+LINEPADDING	=	TOGGLEPADDING*2 + TOGGLE_X;
+LINELENGTH	=	PAGE_X - (TOGGLEPADDING*2);
 
-FRAMEWIDTH		= TOGGLEPADDING*3.5 + TOGGLEWIDTH + PAGEWIDTH;
-FRAMEHEIGHT		= TOGGLEPADDING*2.5 + PAGEHEIGHT;
-FRAMEDEPTH		= 4;
+FRAME_X	= TOGGLEPADDING*3.5 + TOGGLE_X + PAGE_X;
+FRAME_Y	= TOGGLEPADDING*2.5 + PAGE_Y;
+FRAME_Z	= 4;
 
-PAGEOFFSETX		= TOGGLEPADDING*2 + TOGGLEWIDTH;
-PAGEOFFSETY		= TOGGLEPADDING*1.25;
+PAGEOFFSET_X	= TOGGLEPADDING*2;
+PAGEOFFSET_Y	= TOGGLEPADDING*1.25;
 
 module page(){
-	color("white") cube([PAGEWIDTH, PAGEHEIGHT, PAGEDEPTH]);
+  color("white") cube([PAGE_X, PAGE_Y, PAGE_Z]);
+	translate([PAGEOFFSET_X+TOGGLEPADDING,TOGGLESPACE*NUMTOGGLES+TOGGLESPACE+1,PAGE_Z]) text("Daily Chores");
 }
 
 module toggle(){
-	cube([TOGGLEWIDTH, TOGGLEHEIGHT, TOGGLEDEPTH]);
+	cube([TOGGLE_X, TOGGLE_Y, TOGGLE_Z]);
 }
 
 module line(){
-	translate([LINEPADDING,0,.75+FRAMEDEPTH+PAGEDEPTH]) 
-	// rotate([0,180,0])
-	rotate([0,90,0]) 
-	{
-		linear_extrude(LINELENGTH) {
-			polygon([
-			[.5,1],
-			[.5,0],
-			[1,.5]
-			]);
-		}
-	}
+	translate([LINEPADDING,0,.75+FRAME_Z+PAGE_Z]) 
+	rotate([0,90,0]) linear_extrude(LINELENGTH) polygon([[.5,1],[.5,0],[1,.5]]);
 }
 
 module toggles(){
@@ -61,11 +59,22 @@ module toggles(){
 	// header line
 	translate([TOGGLEPADDING,TOGGLESPACE*NUMTOGGLES+TOGGLESPACE+1,0]) line();
 }
+
 module frame(){
-	color("firebrick") cube([FRAMEWIDTH, FRAMEHEIGHT, FRAMEDEPTH]);
-	translate([PAGEOFFSETX,PAGEOFFSETY,FRAMEDEPTH]) page();
+	if (HAND=="left"){
+		translate([FRAME_X,0,0]) mirror([1,0,0]) toggles();
+		translate([PAGEOFFSET_X,PAGEOFFSET_Y,FRAME_Z]) page();
+		color("firebrick") cube([FRAME_X, FRAME_Y, FRAME_Z]);
+	} else if (HAND=="both"){
+		toggles();
+		translate([FRAME_X+TOGGLE_X,0,0]) mirror([1,0,0]) toggles();
+		translate([PAGEOFFSET_X + TOGGLE_X,PAGEOFFSET_Y,FRAME_Z]) page();
+		color("firebrick") cube([FRAME_X+TOGGLE_X, FRAME_Y, FRAME_Z]);
+	} else {
+		toggles();
+		translate([PAGEOFFSET_X + TOGGLE_X,PAGEOFFSET_Y,FRAME_Z]) page();
+		color("firebrick") cube([FRAME_X, FRAME_Y, FRAME_Z]);
+	}
 }
 
-// page();
-toggles();
 frame();
