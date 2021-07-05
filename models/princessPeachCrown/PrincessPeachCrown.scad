@@ -7,7 +7,7 @@ $fn=200;
 	unit = "cm"; // inch or cm
 	printJewels=false; //set to false if you want to print jewels in a different color
 //end measurement/unit settings
-
+500/3.14159=159.15507752443826215
 //unit conversion
 	i2c = 25.4;
 	c2i = 0.03937;
