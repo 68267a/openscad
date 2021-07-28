@@ -210,9 +210,15 @@ module lid() {
 	translate([0,(2*tol)-casing_or-casing_stack_h+2*tol+clip_channel_d,front_h/2]) cube([clip_channel_w,clip_channel_d,front_h], center=true);
 }
 
-translate([-50,0,0]) key();
-translate([-40,0,0]) key_pins();
-translate([-30,0,0]) driver_pins();
-translate([0,0,0]) plug();
-translate([50,0,0]) casing();
-translate([70,0,0]) lid();
+translate([-50,0,0]) 
+	key();
+// translate([-40,0,0]) 
+	key_pins();
+// translate([-30,0,0]) 
+	driver_pins();
+// translate([0,0,0]) 
+	plug();
+// translate([50,0,0]) 
+	casing();
+// translate([70,0,0]) 
+	lid();

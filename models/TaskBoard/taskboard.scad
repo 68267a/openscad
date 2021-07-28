@@ -11,7 +11,6 @@ $fn=200;
 	c2i = 0.03937;
 
 HAND 					= "right";		//right|left|both
-MEASUREMENT		= "page"; 	//page|toggle
 
 PAGE_X				=	i2c * 4;	//4"x6"
 PAGE_Y				= i2c * 6;
@@ -23,7 +22,7 @@ TOGGLEHOLE_Z	= 21	; //z
 TOGGLEPADDING = 4;
 
 TOGGLEMOUNT_X = TOGGLEHOLE_X + TOGGLEPADDING;
-TOGGLEMOUNT_Y	=	TOGGLEHOLE_Y + TOGGLEPADDING;
+TOGGLEMOUNT_Y	=	TOGGLEHOLE_Y + TOGGLEPADDING+1;
 TOGGLEMOUNT_Z	=	TOGGLEHOLE_Z + TOGGLEPADDING;
 
 TOGGLESPACE		= TOGGLEPADDING + TOGGLEHOLE_Y;
@@ -48,7 +47,7 @@ module line(){
 module page(){
 	difference() {
 		color("white") cube([PAGE_X, PAGE_Y/NUMTOGGLES,PAGE_Z]);
-		color("orange") translate([TOGGLEPADDING,TOGGLEPADDING/2,1.5]) line();
+		#translate([TOGGLEPADDING,TOGGLEPADDING/2,1.5]) line();
 	}
 }
 
@@ -65,28 +64,13 @@ module frame(){
 
 
 module chartModule(){
-	//toggle
-	if (HAND=="left"){
-	// Put the toggles on the right
-		frame();
-		translate([0,0,FRAME_Z]) page();
-		translate([PAGE_X,0,0]) toggle();
-	} else if (HAND=="both"){
-	// Put the toggles on both sides
-		resize([PAGE_X + 2*TOGGLEMOUNT_X,0,0]) frame();
-		translate([TOGGLEMOUNT_X,0,FRAME_Z]) page();
-		translate([0,0,0]) toggle();
-		translate([PAGE_X+TOGGLEMOUNT_X,0,0]) toggle();
-	} else {
-	// Put the toggles on the right
-		resize([]) frame();
-		translate([TOGGLEMOUNT_X,0,FRAME_Z]) page();
-		translate([0,0,0]) toggle();
-	}
+	resize([]) frame();
+	translate([TOGGLEMOUNT_X,0,FRAME_Z]) page();
+	translate([0,0,0]) toggle();
 }
 
 module chartHeader(){
-	frame();
+	// frame();
   translate([0,0,FRAME_Z]) difference() {
 		color("white") cube([PAGE_X, PAGE_Y/NUMTOGGLES, PAGE_Z]);
 		linear_extrude(3*PAGE_Z)
@@ -96,13 +80,29 @@ module chartHeader(){
 	}
 }
 
-translate([0,PAGE_Y,0]) chartHeader();
-chartModule();
-for( i = [1:1:NUMTOGGLES]) {
-	translate([0,TOGGLESPACE*i,0]) chartModule();
-	// header line
+module chartModules(){
+	chartModule();
+	for( i = [1:1:NUMTOGGLES]) {
+		translate([0,TOGGLESPACE*i,0]) chartModule();
+	}
 }
 
+if (HAND=="left"){
+	translate([0,PAGE_Y-TOGGLEMOUNT_Y,0]) chartHeader();
+	translate([0,PAGE_Y-TOGGLEMOUNT_Y,0]) frame();
+	translate([FRAME_X,0,0]) mirror([1,0,0]) chartModules();
+} else if (HAND=="both"){
+// Put the toggles on both sides
+	translate([TOGGLEHOLE_X+TOGGLEPADDING,PAGE_Y-TOGGLEMOUNT_Y,0]) chartHeader();
+	translate([0,PAGE_Y-TOGGLEMOUNT_Y,0]) frame();
+	translate([TOGGLEHOLE_X+TOGGLEPADDING,PAGE_Y-TOGGLEMOUNT_Y,0]) frame();
+	translate([0,0,0]) mirror([0,0,0]) chartModules();
+	translate([TOGGLEHOLE_X+TOGGLEPADDING+FRAME_X,0,0]) mirror([1,0,0]) chartModules();
+} else {
+	translate([TOGGLEHOLE_X+TOGGLEPADDING,PAGE_Y-TOGGLEMOUNT_Y,0]) chartHeader();
+	translate([0,PAGE_Y-TOGGLEMOUNT_Y,0]) frame();
+	chartModules();
+}
 // 	if (HAND=="left"){
 // 		translate([FRAME_X,0,0]) mirror([1,0,0]) toggles();
 // 		translate([PAGEOFFSET_X,PAGEOFFSET_Y,FRAME_Z]) page();
