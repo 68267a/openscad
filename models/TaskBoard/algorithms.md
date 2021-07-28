@@ -13,7 +13,7 @@ B  | Back  | B' | Butt
 
 Becomes
 
-- | Step | Algorithm
+N | Step | Algorithm
 -|-|-
 1 | white cross                 | R' U R U' R'
 | | | _Run Up Right Oop Run_ 
