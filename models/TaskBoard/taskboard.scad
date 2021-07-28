@@ -10,7 +10,7 @@ $fn=200;
 	i2c = 25.4;
 	c2i = 0.03937;
 
-HAND 					= "right";		//right|left|both
+HAND					= "right";		//right|left|both
 
 PAGE_X				=	i2c * 4;	//4"x6"
 PAGE_Y				= i2c * 6;
@@ -71,7 +71,7 @@ module chartModule(){
 
 module chartHeader(){
 	// frame();
-  translate([0,0,FRAME_Z]) difference() {
+	translate([0,0,FRAME_Z]) difference() {
 		color("white") cube([PAGE_X, PAGE_Y/NUMTOGGLES, PAGE_Z]);
 		linear_extrude(3*PAGE_Z)
 			translate([2*PAGEOFFSET_X+TOGGLEPADDING,TOGGLESPACE/2,1]) 
@@ -103,19 +103,3 @@ if (HAND=="left"){
 	translate([0,PAGE_Y-TOGGLEMOUNT_Y,0]) frame();
 	chartModules();
 }
-// 	if (HAND=="left"){
-// 		translate([FRAME_X,0,0]) mirror([1,0,0]) toggles();
-// 		translate([PAGEOFFSET_X,PAGEOFFSET_Y,FRAME_Z]) page();
-// 		color("firebrick") cube([FRAME_X, FRAME_Y, FRAME_Z]);
-// 	} else if (HAND=="both"){
-// 		toggles();
-// 		translate([FRAME_X+TOGGLEHOLE_X,0,0]) mirror([1,0,0]) toggles();
-// 		translate([PAGEOFFSET_X + TOGGLEHOLE_X,PAGEOFFSET_Y,FRAME_Z]) page();
-// 		color("firebrick") cube([FRAME_X+TOGGLEHOLE_X, FRAME_Y, FRAME_Z]);
-// 	} else {
-// 		toggles();
-// 		translate([PAGEOFFSET_X + TOGGLEHOLE_X,PAGEOFFSET_Y,FRAME_Z]) page();
-// 		color("firebrick") cube([FRAME_X, FRAME_Y, FRAME_Z]);
-// 	}
-
-// frame();
