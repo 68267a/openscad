@@ -10,11 +10,12 @@ $fn=200;
     i2c = 25.4;
     c2i = 0.03937;
 
-HAND    =   "right";     //right|left|both
+MEASUREMENT     =   "page";     //page|toggles (whether to set size by page dimensions or number of toggles)
+HAND            =   "right";    //right|left|both
 
-PAGE_X  =   i2c * 4;     //4"x6"
-PAGE_Y  =   i2c * 6;
-PAGE_Z  =   i2c * (1/32);
+PAGE_X          =   i2c * 4;    //4"x6"
+PAGE_Y          =   i2c * 6;    //BUG: broken at different sizes
+PAGE_Z          =   i2c * (1/32);
 
 TOGGLEHOLE_X    =   31  ;//x
 TOGGLEHOLE_Y    =   12.3;//y
@@ -46,22 +47,21 @@ module line(){
 
 module page(){
     difference() {
-    color("white") cube([PAGE_X, PAGE_Y/NUMTOGGLES,PAGE_Z]);
-    #translate([TOGGLEPADDING,TOGGLEPADDING/2,1.5]) line();
+        color("white") cube([PAGE_X, PAGE_Y/NUMTOGGLES-TOGGLEPADDING,PAGE_Z]);
+        color("orange") translate([TOGGLEPADDING,TOGGLEPADDING/2,1.5]) line();
     }
 }
 
 module toggle(){
     difference(){
-    cube([TOGGLEHOLE_X+TOGGLEPADDING, PAGE_Y/NUMTOGGLES, TOGGLEHOLE_Z]);
-    translate([TOGGLEPADDING/2,TOGGLEPADDING,TOGGLEPADDING/2]) cube([TOGGLEHOLE_X, TOGGLEHOLE_Y, TOGGLEHOLE_Z]);
+        cube([TOGGLEHOLE_X+TOGGLEPADDING, PAGE_Y/NUMTOGGLES, TOGGLEHOLE_Z]);
+        translate([TOGGLEPADDING/2,TOGGLEPADDING,TOGGLEPADDING/2]) cube([TOGGLEHOLE_X, TOGGLEHOLE_Y, TOGGLEHOLE_Z]);
     }
 }
 
 module frame(){
     color("firebrick") cube([PAGE_X + TOGGLEMOUNT_X, PAGE_Y/NUMTOGGLES, FRAME_Z]);
 }
-
 
 module chartModule(){
     resize([]) frame();
@@ -72,18 +72,18 @@ module chartModule(){
 module chartHeader(){
     // frame();
     translate([0,0,FRAME_Z]) difference() {
-    color("white") cube([PAGE_X, PAGE_Y/NUMTOGGLES, PAGE_Z]);
-    linear_extrude(3*PAGE_Z)
-    translate([2*PAGEOFFSET_X+TOGGLEPADDING,TOGGLESPACE/2,1]) 
-    // PAGEOFFSET_X+TOGGLEPADDING,TOGGLESPACE+TOGGLESPACE+1
-    text("Daily Chores", font = "Vampire Kiss Demo");
+        color("white") translate([0,-TOGGLEPADDING,0])cube([PAGE_X, PAGE_Y/NUMTOGGLES+TOGGLEPADDING, PAGE_Z]);
+        linear_extrude(3*PAGE_Z)
+        translate([2*PAGEOFFSET_X+TOGGLEPADDING,TOGGLESPACE/2,1]) 
+        // PAGEOFFSET_X+TOGGLEPADDING,TOGGLESPACE+TOGGLESPACE+1
+        text("Daily Chores", font = "Vampire Kiss Demo");
     }
 }
 
 module chartModules(){
     chartModule();
     for( i = [1:1:NUMTOGGLES]) {
-    translate([0,TOGGLESPACE*i,0]) chartModule();
+        translate([0,TOGGLESPACE*i,0]) chartModule();
     }
 }
 
