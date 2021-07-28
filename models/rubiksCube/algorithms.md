@@ -6,34 +6,34 @@ Notation | Word | Reverse Notation | Word
 -|-|-|-
 F  | Front | F' | Fast
 R  | Right | R' | Run
-L  | Left  | L' | Last
+L  | Left  | L' | Lift
 U  | Up    | U' | Oop
 D  | Down  | D' | Dig
 B  | Back  | B' | Butt
 
 Becomes
 
-N | Step | Algorithm
+Step | Description | Algorithm
 -|-|-
 1 | white cross                 | R' U R U' R'
-| | | _Run Up Right Oop Run_ 
+| | | *Run Up Right Oop Run* 
 2 | white corners               | R' D' R D
-| | | _Run Dig Right Down_ 
+| | | *Run Dig Right Down* 
 3a| middle layer edges to left  | U' L' U L U F U' F'
-| | | _Oop Last Up Left Up Front Oop Fast_ 
+| | | *Oop Lift Up Left Up Front Oop Fast* 
 3b| middle layer edges to right | U R U' R' U' F' U F
-| | | _Up Right Oop Run Oop Fast Up Front_ 
-4a | yellow cross dot            | F R U R' U' F'
-| | | _Front Right Up Run Oop Fast_ 
-4b | yellow cross "L"            | F U R U' R' F'
-| | | _Front Up Right Oop Run Fast_ 
-4c | yellow cross line           | F R U R' U' F'
-| | | _Front Right Up Run Oop Fast_ 
+| | | *Up Right Oop Run Oop Fast Up Front* 
+4a | yellow cross dot to "L"     | F R U R' U' F'
+| | | *Front Right Up Run Oop Fast* 
+4b | yellow cross "L" to line    | F U R U' R' F'
+| | | *Front Up Right Oop Run Fast* 
+4c | yellow cross line to cross  | F R U R' U' F'
+| | | *Front Right Up Run Oop Fast* 
 5a | Only one yellow corner      | R U R' U R UU R'
-| | | _Right Up Run Up Right Up Up Run_ 
+| | | *Right Up Run Up Right Up Up Run* 
 5b | Sune and Antisune (corners) | UU R UU R' U' R U' R'
-| | | _Up Up Right Up Up Run Oop Right Oop Run_ 
+| | | *Up Up Right Up Up Run Oop Right Oop Run* 
 6a | Headlights                  | R' F R' BB R F' R' BB RR
-| | | _Run Front Run Back Back Right Fast Run Back Back Right Right_ 
+| | | *Run Front Run Back Back Right Fast Run Back Back Right Right* 
 6b | U permutation (solved bar)  | R U' R U R U R U' R' U' RR
-| | | _Right Oop Right Up Right Up Right Oop Run Oop Right Right_ 
+| | | *Right Oop Right Up Right Up Right Oop Run Oop Right Right* 
