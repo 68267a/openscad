@@ -10,12 +10,13 @@ LABEL_X = TRAY_XY;
 LABEL_Y = 20;
 LABEL_Z = TRAY_Z;
 
-DAYS=[["Sunday"],["Monday"],["Tuesday"],["Wednesday"],["Thursday"],["Friday"],["Saturday"]];
+DAYS=[["Sunday"],["Monday"]];
+// DAYS=[["Sunday"],["Monday"],["Tuesday"],["Wednesday"],["Thursday"],["Friday"],["Saturday"]];
 
 module dayLabel(v) {
 	let(i=0) {
 		difference() {
-			translate([0,i*(LABEL_Y+5),0]) cube([LABEL_X,LABEL_Y,TRAY_Z]);
+			translate([0,i*(LABEL_Y+5),1]) cube([LABEL_X,LABEL_Y,TRAY_Z]);
 			color("firebrick") translate([TRAY_MARGIN,2+i*(LABEL_Y+5)+2,-0.5]) linear_extrude(TRAY_Z+2) text(v, font = "Vampire Kiss Demo");
 		}
 	}
@@ -23,7 +24,6 @@ module dayLabel(v) {
 		translate([0,i*(LABEL_Y+5),0]) cube([LABEL_X,LABEL_Y,TRAY_Z]);
 		color("firebrick") translate([TRAY_MARGIN,2+i*(LABEL_Y+5)+2,0]) linear_extrude(TRAY_Z+1) text(v, font = "Vampire Kiss Demo");
 	}
-
 }
 
 module dayTray(){
@@ -33,6 +33,6 @@ module dayTray(){
 }
 
 for (i = [0:1:len(DAYS)-1]) {
-	translate([TRAY_XY*i,0,0]) dayTray();
-	translate([TRAY_XY*i+TRAY_MARGIN,TRAY_XY, 0]) dayLabel(DAYS[i][0]);
+	translate([(TRAY_XY+5)*i,0,0]) dayTray();
+	translate([(TRAY_XY+5)*i+TRAY_MARGIN,TRAY_XY, 0]) dayLabel(DAYS[i][0]);
 }
