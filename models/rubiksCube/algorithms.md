@@ -1,39 +1,21 @@
 <!-- https://old.reddit.com/r/rubikscube/comments/ot13nb/3x3_mnemonic_algorithm/ -->
 # List of Rubik's Cube Algorithms 3x3
-These are the algorithms that are necessary to solve the Rubik's Cube and the step in the process where they are used. For more detailed information on where and when to use these algorithms, see below.
-
-Notation | Word | Reverse Notation | Word
+N | Step | Algorithm | Description
 -|-|-|-
-F  | Front | F' | Fast
-R  | Right | R' | Run
-L  | Left  | L' | Lift
-U  | Up    | U' | Oop
-D  | Down  | D' | Dig
-B  | Back  | B' | Butt
+1 | White edges | ez | make sure white edges match side tops
+2 | White Corners | R' D' R | corners match edges
+3a| Middle to left | U' L' U L U F U' F' | 
+3b| Middle to right | U R U' R' U' F' U F | 
+4 | Yellow Cross | F R U R' U' F' | Dot > L > Line. Sides don't matter
+5 | Yellow Edges | R U R' U R U2 R' U | Repeat for each incorrect edge piece, moves to bottom left.
+6a| Place yellow corners | U R U' L' U R' U' L | PLACES ONLY. Orientation not licely correct. Hold with correct corner in right thumb.
+6b| Orient yellow corners | R' D' R D | When yellow corner is correct, do `U`. DO NOT REORIENT CUBE.
 
-Becomes
-
-Step | Description | Algorithm
--|-|-
-1 | white cross                 | R' U R U' R'
-| | | *Run Up Right Oop Run* 
-2 | white corners               | R' D' R D
-| | | *Run Dig Right Down* 
-3a| middle layer edges to left  | U' L' U L U F U' F'
-| | | *Oop Lift Up Left Up Front Oop Fast* 
-3b| middle layer edges to right | U R U' R' U' F' U F
-| | | *Up Right Oop Run Oop Fast Up Front* 
-4a | yellow cross dot to "L"     | F R U R' U' F'
-| | | *Front Right Up Run Oop Fast* 
-4b | yellow cross "L" to line    | F U R U' R' F'
-| | | *Front Up Right Oop Run Fast* 
-4c | yellow cross line to cross  | F R U R' U' F'
-| | | *Front Right Up Run Oop Fast* 
-5a | Only one yellow corner      | R U R' U R UU R'
-| | | *Right Up Run Up Right Up Up Run* 
-5b | Sune and Antisune (corners) | UU R UU R' U' R U' R'
-| | | *Up Up Right Up Up Run Oop Right Oop Run* 
-6a | Headlights                  | R' F R' BB R F' R' BB RR
-| | | *Run Front Run Back Back Right Fast Run Back Back Right Right* 
-6b | U permutation (solved bar)  | R U' R U R U R U' R' U' RR
-| | | *Right Oop Right Up Right Up Right Oop Run Oop Right Right* 
+# List of Rubik's Cube Algorithms 2x2
+_Note: Colors are Red > Blue > Orange > Green_
+N | Step | Algorithm | Description
+-|-|-|-
+1 | White | R U R' U' | Upper sides should be correct. When done, flip so white is on bottom.
+2a| Position Yellow | U | Get either one correct piece or 2 correct diagonals.
+2b| Position Yellow | U R U' L' U R' U' L | Repeat until positions correct (orientation could be wrong)
+3 | Orient Yellow Corners | R U R' U' | When  yellow corner is correct, do `U` and repeat. DO NOT REORIENT CUBE.
