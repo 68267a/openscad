@@ -80,17 +80,17 @@ translate([8.5,3.5,0]){
 module baseplate(){
 difference(){
     base();
-    slot(-9.25,16.25); //Sunday-AM
-    slot(-9.25,6.25); //Monday-AM
-    slot(-9.25,-3.75); //Tuesday-AM
+    slot(-9.25, 16.25); //Sunday-AM
+    slot(-9.25,  6.25); //Monday-AM
+    slot(-9.25, -3.75); //Tuesday-AM
     slot(-9.25,-13.75); //Wednesday-AM
     slot(-9.25,-23.75); //Thursday-AM
     slot(-9.25,-33.75); //Friday-AM
     slot(-9.25,-43.75); //Saturday-AM
     
-    slot(16.25,16.25); //Sunday-PM
-    slot(16.25,6.25); //Monday-PM
-    slot(16.25,-3.75); //Tuesday-PM
+    slot(16.25, 16.25); //Sunday-PM
+    slot(16.25,  6.25); //Monday-PM
+    slot(16.25, -3.75); //Tuesday-PM
     slot(16.25,-13.75); //Wednesday-PM
     slot(16.25,-23.75); //Thursday-PM
     slot(16.25,-33.75); //Friday-PM

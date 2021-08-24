@@ -4,6 +4,7 @@ W = 75; //Width of the plate, original = 75
 H = 5.5; //Total Height, original = 5.5
 wt = 2; //Wall thickness, original = 2
 
+
 module base_outer(){
     translate([0,0,H/4]){
         minkowski(){
@@ -54,11 +55,13 @@ translate([34.25+12,8.5/2,0]){
 }
 module track(x,y){  //Subtract inner from outer track
     translate([x,y,0]){
-difference(){
-track_outer();
-track_inner();
-}
-}
+        difference(){
+            track_outer();
+            track_inner();
+        }
+        translate([17,1.5,H/5]) rotate([-90,0,0]) cylinder(d=1, h=8.5, $fn=50);
+        translate([42.5,1.5,H/5]) rotate([-90,0,0]) cylinder(d=1, h=8.5, $fn=50);
+    }
 }
 module tracks(){    //Combine 7 tracks
     
@@ -127,14 +130,23 @@ tabs();
 }
 }
 final();
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+// // ///////////////////////////////
+// color("Green") translate([-16.25, 18.25,H/4]) import("Slider_V2.STL");
+// color("Green") translate([16.25, 18.25,H/4]) import("Slider_V2.STL");
+
+// module slot(x,y){  //Cutout slot, (x,y) = position
+// translate([x,y,0]){
+// union(){
+// cube([8.5,7,1.5]);
+// translate([0,3.5,0]){
+//     cylinder(r=3.5,h=1.5);
+// }
+// translate([8.5,3.5,0]){
+//     cylinder(r=3.5,h=1.5);
+// }
+// }
+// }
+// }
+//     // translate([0,2,H/4]) slot(-9.25, 16.25); //Sunday-AM
+//     // translate([0,2,H/4]) slot(16.25, 16.25); //Sunday-PM
