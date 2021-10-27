@@ -8,11 +8,11 @@ CAPLENGTH = 3.5;
 CAPDIAMETER = 29;
 
 FLARELENGTH = 9;
-FLAREDIAMETER = 27;
+FLAREDIAMETER = 24;
 FLAREGAP = 8.5;
 
 FLEXGAPWIDTH = 3;
-FLEXGAPLENGTH = 25;
+FLEXGAPLENGTH = 16.5;
 FLEXGAPHEIGHT = CAPDIAMETER;
 
 module shaft(){
@@ -29,17 +29,10 @@ module cap(){
 }
 
 module flare() {
-	translate([0,0,FLARELENGTH+CAPLENGTH])
+	translate([0,0,FLARELENGTH])
 	rotate([180,0,0])
 	cylinder(
 		h=FLARELENGTH,
-		d1=SHAFTDIAMETER,
-		d2=FLAREDIAMETER
-	);
-	translate([0,0,.5])
-	rotate([0,0,0])
-	cylinder(
-		h=FLARELENGTH/3,
 		d1=SHAFTDIAMETER,
 		d2=FLAREDIAMETER
 	);
@@ -59,12 +52,9 @@ module solidpin(){
 	}
 }
 
-//	color ("orange") hollowshaft();
-//	color("blue") flexgap();
+	color ("orange") hollowshaft();
+	color("blue") flexgap();
 difference(){
-	// cube(10, center=true);
-	// cylinder(20,center=true);
-	solidpin();
-	hollowshaft();
-	flexgap();
+	cube(10, center=true);
+	cylinder(20,center=true);
 }
