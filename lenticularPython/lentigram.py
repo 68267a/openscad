@@ -8,6 +8,8 @@ imb = Image.open(r"darthvader.png")
 # imb.save('colorsflipped.png')
 width, height = ima.size
 stripwidth = 5
+# 60 LPI
+# 300 PPI
 numstrips = round(width/stripwidth)
 
 print("width" + str(width)+ " stripwidth" + str(stripwidth))
