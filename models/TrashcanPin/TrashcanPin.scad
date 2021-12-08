@@ -1,18 +1,18 @@
 $fn=200;
-
-SHAFTLENGTH = 101.5;
+i2c=25.4;
+SHAFTLENGTH = 4*i2c;
 SHAFTDIAMETER = 20;
-HOLLOWDIAMETER = 17;
+HOLLOWDIAMETER = 0;
 
 CAPLENGTH = 3.5;
 CAPDIAMETER = 29;
 
 FLARELENGTH = 9;
-FLAREDIAMETER = 24;
+FLAREDIAMETER = 30;
 FLAREGAP = 8.5;
 
 FLEXGAPWIDTH = 3;
-FLEXGAPLENGTH = 16.5;
+FLEXGAPLENGTH = 25;
 FLEXGAPHEIGHT = CAPDIAMETER;
 
 module shaft(){
@@ -29,10 +29,17 @@ module cap(){
 }
 
 module flare() {
-	translate([0,0,FLARELENGTH])
+	translate([0,0,FLARELENGTH+CAPLENGTH])
 	rotate([180,0,0])
 	cylinder(
 		h=FLARELENGTH,
+		d1=SHAFTDIAMETER,
+		d2=FLAREDIAMETER
+	);
+	translate([0,0,.5])
+	rotate([0,0,0])
+	cylinder(
+		h=FLARELENGTH/3,
 		d1=SHAFTDIAMETER,
 		d2=FLAREDIAMETER
 	);
@@ -52,9 +59,12 @@ module solidpin(){
 	}
 }
 
-	color ("orange") hollowshaft();
-	color("blue") flexgap();
+//	color ("orange") hollowshaft();
+//	color("blue") flexgap();
 difference(){
-	cube(10, center=true);
-	cylinder(20,center=true);
+	// cube(10, center=true);
+	// cylinder(20,center=true);
+	solidpin();
+	hollowshaft();
+	flexgap();
 }
