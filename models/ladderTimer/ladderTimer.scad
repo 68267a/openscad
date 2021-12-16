@@ -1,13 +1,13 @@
 $fn=200;
 
-POLEHEIGHT = 50;
-POLEDIAMETER = 5;
-SLEEVEID = 5.25;
-SLEEVEOD = 6;
-RAMPLENGTH = 25;
+RAMPLENGTH = 100;
 RAMPANGLE = 6;
-RAMPWIDTH = 5;
-NUMRAMPS = 10;
+RAMPWIDTH = 25;
+NUMRAMPS = 5;
+SLEEVEID = 27;
+SLEEVEOD = 30;
+POLEHEIGHT = SLEEVEID*NUMRAMPS;
+POLEDIAMETER = 25;
 
 
 module pole() {
@@ -24,9 +24,9 @@ module ramp() {
 			d=RAMPWIDTH
 			// center=true
 		);
-		translate([0,0,-1]) cylinder(
+		#translate([0,0,-1]) cylinder(
 			h=RAMPLENGTH+2,
-			d=RAMPWIDTH-1
+			d=RAMPWIDTH*.85
 			// center=true
 		);
 		translate([-RAMPWIDTH/2-1,0,-1]) cube([
@@ -45,10 +45,17 @@ module sleeve() {
 			d=SLEEVEOD
 		);
 		resize([SLEEVEID,SLEEVEID,0]) translate([0,0,-1]) pole();
-		rotate([90+RAMPANGLE,0,0]) translate([0,SLEEVEID/1.5,0]) ramp();
+		#rotate([90+RAMPANGLE,0,0]) translate([0,SLEEVEID/1.5,0]) ramp();
 	}
 }
 
-pole();
-translate ([2*POLEDIAMETER,0,0]) rotate([0,0,0]) sleeve();
-translate ([4*POLEDIAMETER,0,0]) ramp();
+difference() {
+	pole();
+	translate([-POLEDIAMETER/2,-POLEDIAMETER*1.2,-1]) cube([
+		POLEDIAMETER,
+		POLEDIAMETER,
+		POLEHEIGHT+2
+	]);
+};
+translate ([1.5*POLEDIAMETER,0,SLEEVEID]) rotate([180,0,180]) sleeve();
+translate ([3*POLEDIAMETER,0,0]) rotate([0,0,180]) ramp();
