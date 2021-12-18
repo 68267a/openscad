@@ -1,92 +1,84 @@
 $fn=200;
 
+BALLDIAMETER = 4.3;
+BALLRADIUS=BALLDIAMETER/2;
+BALLGAP=10;
 RAMPLENGTH = 107.1;
 RAMPANGLE = 1.25;
-RAMPWIDTH = 15;
 NUMRAMPS = 5;
-SLEEVEID = 17;
-SLEEVEOD = 19;
-POLEHEIGHT = SLEEVEID*NUMRAMPS;
-POLEDIAMETER = 15;
-BASEHEIGHT = SLEEVEID;
-BALLDIAMETER = 10;
+POLEHEIGHT = BALLGAP*NUMRAMPS+BALLGAP;
 
-
-module pole() {
-	cylinder(
-		h=POLEHEIGHT,
-		d=POLEDIAMETER
-	);
+module ball(){
+	color("silver") sphere(BALLRADIUS);
 }
 
-module posthole() {
-	difference() {
-		cylinder(
-			h=BASEHEIGHT,
-			d=POLEDIAMETER*1.1
-		);
-		difference() {
-			pole();
-			translate([-POLEDIAMETER/2,-POLEDIAMETER*1.2,-1]) cube([
-				POLEDIAMETER,
-				POLEDIAMETER,
-				POLEHEIGHT+2
-			]);
-		}
-	}
-}	
-
-module base() {
-	translate([-(RAMPLENGTH*1.1)/2,0,0]) rotate([0,0,90]) posthole();
-	translate([(RAMPLENGTH*1.1)/2,0,0]) rotate([0,0,-90]) posthole();
-	difference() {
-		translate([-(RAMPLENGTH*1.05)/2,-RAMPWIDTH/2,0]) cube([RAMPLENGTH*1.05,RAMPWIDTH,10]);
-		translate([-(RAMPLENGTH*.9)/2,0,8]) rotate([0,90,0]) cylinder(h=RAMPLENGTH*.9, d=BALLDIAMETER);
-		translate([0,-BALLDIAMETER/2,BALLDIAMETER*.75]) rotate([90,0,0]) cylinder(h=BALLDIAMETER,d=BALLDIAMETER, center=true);
-	}
-}
-
-module ramp() {
-	difference() {
-		cylinder(
-			h=RAMPLENGTH,
-			d=RAMPWIDTH
-			// center=true
-		);
-		translate([0,0,-1]) cylinder(
-			h=RAMPLENGTH+2,
-			d=RAMPWIDTH*.85
-			// center=true
-		);
-		translate([-RAMPWIDTH/2-1,0,-1]) cube([
-			RAMPWIDTH+2,
-			RAMPWIDTH,
-			RAMPLENGTH+2]
-			// ,center=true
-		);
-	}
-}
-
-module sleeve() {
-	difference() {
-		cylinder(
-			h=SLEEVEID,
-			d=SLEEVEOD
-		);
-		resize([SLEEVEID,SLEEVEID,0]) translate([0,0,-1]) pole();
-		rotate([90+RAMPANGLE,0,0]) translate([0,SLEEVEID/1.5,0]) ramp();
-	}
-}
-
-difference() {
-	pole();
-	translate([-POLEDIAMETER/2,-POLEDIAMETER*1.2,-1]) cube([
-		POLEDIAMETER,
-		POLEDIAMETER,
-		POLEHEIGHT+2
+module rampshape(){
+	polygon(points=[
+		[0,7],
+		[BALLRADIUS-.25,BALLDIAMETER],
+		[1.8,3],
+		[3,1],
+		[BALLDIAMETER,BALLRADIUS-.25],
+		[6,1],
+		[6.8,3],
+		[BALLDIAMETER+BALLRADIUS+.25,BALLDIAMETER],
+		[9,7],
+		[9,0],
+		[0,0],
+		[0,7]
 	]);
-};
-translate ([1.5*POLEDIAMETER,0,SLEEVEID]) rotate([180,0,180]) sleeve();
-translate ([3*POLEDIAMETER,0,0]) rotate([0,0,180]) ramp();
+}
 
-translate([0,25,0]) base();
+module ramp(){
+	linear_extrude(height=RAMPLENGTH) rampshape();
+}
+
+module basepolehole(){
+	square([BALLGAP/4,BALLGAP-1]);
+}
+module rampmount(){
+	difference() {
+		linear_extrude(height=BALLGAP) square(BALLGAP+1);
+		translate([1,1,BALLGAP/2]) rotate([RAMPANGLE,0,0]) ramp();
+		translate([2,3,1.5]) rotate([90,0,0]) peg();
+		translate([6,3,1.5]) rotate([90,0,0]) peg();
+		translate([2,14,1.5]) rotate([90,0,0]) peg();
+		translate([6,14,1.5]) rotate([90,0,0]) peg();
+	}
+}
+
+module peg() {
+	cube([3,3,6]);
+}
+
+module base(){
+difference() {
+		linear_extrude(height=RAMPLENGTH/2+3*BALLGAP) square(11);
+		translate([3,10,17]) sphere(BALLRADIUS+3);
+		translate([1,1,80.6]) peg();
+		translate([1,6,80.6]) peg();
+		translate([6,1,80.6]) peg();
+		translate([6,6,80.6]) peg();
+		translate([2,8,4.5]) rotate([270,0,0]) peg();
+		translate([6,8,4.5]) rotate([270,0,0]) peg();
+
+	}
+}
+module basepole(){
+	linear_extrude(height=POLEHEIGHT) basepolehole();
+}
+
+module polespacer(){
+	linear_extrude(height=BALLGAP) square([10,11]);
+}
+
+//translate([25,5.4,16]) ball();
+translate([0,0,0]) rotate([90,0,90]) base();
+
+// translate([1,1,1]) rotate([0,0,0]) basepole();
+// translate([133.6,1,1]) rotate([0,0,0]) basepole();
+
+translate([0,20,0]) rotate([0,0,0]) rampmount();
+
+translate([0,-5,0]) peg();
+translate([0,-20,0]) rotate([90,0,90]) ramp();
