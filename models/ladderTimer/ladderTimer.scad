@@ -1,4 +1,5 @@
 $fn=200;
+use <snapfit.scad>;
 
 BALLDIAMETER = 4.3;
 BALLRADIUS=BALLDIAMETER/2;
@@ -38,32 +39,32 @@ module basepolehole(){
 }
 module rampmount(){
 	difference() {
-		linear_extrude(height=BALLGAP) square(BALLGAP+1);
-		translate([1,1,BALLGAP/2]) rotate([RAMPANGLE,0,0]) ramp();
-		translate([2,3,1.5]) rotate([90,0,0]) peg();
-		translate([6,3,1.5]) rotate([90,0,0]) peg();
-		translate([2,14,1.5]) rotate([90,0,0]) peg();
-		translate([6,14,1.5]) rotate([90,0,0]) peg();
+		union() {
+			linear_extrude(height=BALLGAP) square(BALLGAP+1);
+			translate([8,6,3]) rotate([90,0,0]) snapfitB();
+			translate([3,6,3]) rotate([90,0,0]) snapfitB();
+		}
+			translate([1,1,6]) rotate([RAMPANGLE,0,0]) ramp();
+			translate([3,17,3]) rotate([90,0,0]) snapfitA();
+			translate([8,17,3]) rotate([90,0,0]) snapfitA();
 	}
-}
-
-module peg() {
-	cube([3,3,6]);
 }
 
 module base(){
 difference() {
+	union() {
 		linear_extrude(height=RAMPLENGTH/2+3*BALLGAP) square(11);
+		translate([2.75,2.75,78]) snapfitB();
+		translate([8.25,8.25,78]) snapfitB();
+	}
+		translate([8.25,2.75,89]) rotate([180,0,0]) snapfitA();
+		translate([2.75,8.25,89]) rotate([180,0,0]) snapfitA();
 		translate([3,10,17]) sphere(BALLRADIUS+3);
-		translate([1,1,80.6]) peg();
-		translate([1,6,80.6]) peg();
-		translate([6,1,80.6]) peg();
-		translate([6,6,80.6]) peg();
-		translate([2,8,4.5]) rotate([270,0,0]) peg();
-		translate([6,8,4.5]) rotate([270,0,0]) peg();
-
+		#translate([3,17,3]) rotate([90,0,0]) snapfitA();
+		#translate([8,17,3]) rotate([90,0,0]) snapfitA();
 	}
 }
+
 module basepole(){
 	linear_extrude(height=POLEHEIGHT) basepolehole();
 }
@@ -80,5 +81,5 @@ translate([0,0,0]) rotate([90,0,90]) base();
 
 translate([0,20,0]) rotate([0,0,0]) rampmount();
 
-translate([0,-5,0]) peg();
 translate([0,-20,0]) rotate([90,0,90]) ramp();
+
