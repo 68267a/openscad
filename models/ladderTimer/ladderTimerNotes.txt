@@ -1,4 +1,7 @@
 $fn=200;
+; https://ophysics.com/r1.html
+; google "AP Physics formula sheets"
+; https://www.youtube.com/watch?v=Hy6lA9xlPSI
 ; https://youtu.be/gj9H1Ti4yc0
 numTicks=4; 1 tick = 1 second
 ballWeight=15; grams
@@ -43,3 +46,4 @@ time = speed * distance?
 // acceleration	g	9.81
 // shape factor	c	0.4
 // time	t	t=2*l/v
+
