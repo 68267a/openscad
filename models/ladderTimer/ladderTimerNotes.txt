@@ -47,3 +47,10 @@ time = speed * distance?
 // shape factor	c	0.4
 // time	t	t=2*l/v
 
+v0	0	m/s	
+t	1	s	
+theta	1.25	degrees	
+a=gsintheta	=9.82*SIN(B3/180*PI())		
+			
+delta x	=0.5*B4*B2^2	meters	v0*t + 1/2*a*t^2
+	=B6*100	cm	
